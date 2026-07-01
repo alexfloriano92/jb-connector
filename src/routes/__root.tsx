@@ -10,6 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
+import jbCss from "../jb.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
@@ -77,20 +78,24 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "JB Multimarcas | Veículos Novos e Seminovos em Cachoeira de Minas - MG" },
+      { name: "description", content: "JB Multimarcas — a melhor concessionária de veículos novos e seminovos de Cachoeira de Minas. Compra, venda, troca e financiamento. Venha tomar um cafezinho e sair com seu carro!" },
+      { name: "author", content: "JB Multimarcas" },
+      { property: "og:title", content: "JB Multimarcas | Veículos Novos e Seminovos" },
+      { property: "og:description", content: "A escolha perfeita para você! Compra, venda, troca e financiamento em Cachoeira de Minas - MG." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
+      { rel: "stylesheet", href: jbCss },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" },
+      { rel: "stylesheet", href: "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
