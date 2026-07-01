@@ -125,7 +125,8 @@ function AdminPage() {
   }
 
   async function toggle(id: string, field: "sold" | "featured", value: boolean) {
-    const { error } = await supabase.from("cars").update({ [field]: value }).eq("id", id);
+    const patch = field === "sold" ? { sold: value } : { featured: value };
+    const { error } = await supabase.from("cars").update(patch).eq("id", id);
     if (error) return alert(error.message);
     await refetch();
     qc.invalidateQueries({ queryKey: ["cars"] });
