@@ -646,6 +646,104 @@ export default function JBHome() {
           <span className="btn-text">Falar no WhatsApp</span>
         </a>
       </div>
+
+      {selectedCar && (() => {
+        const c = selectedCar;
+        const gallery = carGallery(c);
+        const hasGallery = gallery.length > 0;
+        const currentImg = hasGallery ? gallery[Math.min(galleryIdx, gallery.length - 1)] : null;
+        const yearLine = c.category.includes("novo") && !c.category.includes("seminovo")
+          ? `${c.year} · 0 km · Novo`
+          : `${c.year} · ${fmtKm(c.km)} km`;
+        return (
+          <div
+            onClick={() => setSelectedCar(null)}
+            style={{ position: "fixed", inset: 0, background: "rgba(4,4,10,0.85)", backdropFilter: "blur(8px)", zIndex: 9999, display: "flex", alignItems: "center", justifyContent: "center", padding: 16, overflowY: "auto" }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{ background: "#0f0f1a", border: "1px solid #1e1e2e", borderRadius: 20, maxWidth: 960, width: "100%", maxHeight: "92vh", overflowY: "auto", color: "#fff", fontFamily: "Inter, sans-serif", position: "relative" }}
+            >
+              <button
+                onClick={() => setSelectedCar(null)}
+                aria-label="Fechar"
+                style={{ position: "absolute", top: 12, right: 12, width: 40, height: 40, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.6)", color: "#fff", cursor: "pointer", fontSize: 20, zIndex: 2 }}
+              >×</button>
+
+              <div style={{ position: "relative", background: "#080810", aspectRatio: "16 / 10", display: "flex", alignItems: "center", justifyContent: "center", borderRadius: "20px 20px 0 0", overflow: "hidden" }}>
+                {currentImg ? (
+                  <img src={currentImg} alt={`${c.brand} ${c.model}`} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                ) : (
+                  <i className="fas fa-car" style={{ fontSize: 80, color: "rgba(255,197,1,0.25)" }}></i>
+                )}
+                {gallery.length > 1 && (
+                  <>
+                    <button
+                      onClick={() => setGalleryIdx((i) => (i - 1 + gallery.length) % gallery.length)}
+                      aria-label="Anterior"
+                      style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.6)", color: "#fff", cursor: "pointer", fontSize: 20 }}
+                    >‹</button>
+                    <button
+                      onClick={() => setGalleryIdx((i) => (i + 1) % gallery.length)}
+                      aria-label="Próxima"
+                      style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", width: 44, height: 44, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.6)", color: "#fff", cursor: "pointer", fontSize: 20 }}
+                    >›</button>
+                    <div style={{ position: "absolute", bottom: 12, left: "50%", transform: "translateX(-50%)", background: "rgba(0,0,0,0.7)", color: "#fff", fontSize: 12, padding: "4px 10px", borderRadius: 999 }}>
+                      {Math.min(galleryIdx, gallery.length - 1) + 1} / {gallery.length}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              {gallery.length > 1 && (
+                <div style={{ display: "flex", gap: 8, padding: "12px 16px 0", overflowX: "auto" }}>
+                  {gallery.map((url, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setGalleryIdx(i)}
+                      style={{ flex: "0 0 auto", width: 84, height: 60, borderRadius: 8, overflow: "hidden", border: i === galleryIdx ? "2px solid #FFC501" : "2px solid transparent", padding: 0, cursor: "pointer", background: "#080810" }}
+                    >
+                      <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div style={{ padding: 24 }}>
+                <div style={{ fontSize: 12, color: "#FFC501", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase" }}>{c.brand}</div>
+                <h3 style={{ fontFamily: "Outfit, sans-serif", fontSize: 28, margin: "4px 0 6px" }}>{c.model}</h3>
+                <div style={{ color: "#9aa0c0", fontSize: 14, marginBottom: 16 }}>{yearLine}</div>
+
+                {c.price && (
+                  <div style={{ fontSize: 26, fontWeight: 800, color: "#FFC501", marginBottom: 16 }}>
+                    R$ {Number(c.price).toLocaleString("pt-BR")}
+                  </div>
+                )}
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 10, marginBottom: 20 }}>
+                  {c.fuel && <div style={{ background: "#13131f", border: "1px solid #1e1e2e", borderRadius: 10, padding: "10px 12px", fontSize: 13 }}><i className="fas fa-gas-pump" style={{ color: "#FFC501", marginRight: 8 }}></i>{c.fuel}</div>}
+                  {c.transmission && <div style={{ background: "#13131f", border: "1px solid #1e1e2e", borderRadius: 10, padding: "10px 12px", fontSize: 13 }}><i className="fas fa-cog" style={{ color: "#FFC501", marginRight: 8 }}></i>{c.transmission}</div>}
+                  {c.color && <div style={{ background: "#13131f", border: "1px solid #1e1e2e", borderRadius: 10, padding: "10px 12px", fontSize: 13 }}><i className="fas fa-palette" style={{ color: "#FFC501", marginRight: 8 }}></i>{c.color}</div>}
+                  <div style={{ background: "#13131f", border: "1px solid #1e1e2e", borderRadius: 10, padding: "10px 12px", fontSize: 13 }}><i className="fas fa-road" style={{ color: "#FFC501", marginRight: 8 }}></i>{fmtKm(c.km)} km</div>
+                </div>
+
+                {c.description && (
+                  <p style={{ color: "#c8ccdc", fontSize: 14, lineHeight: 1.6, marginBottom: 20, whiteSpace: "pre-wrap" }}>{c.description}</p>
+                )}
+
+                <a
+                  href={whatsappUrl(`Olá! Tenho interesse no ${c.brand} ${c.model} ${c.year}.`)}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ display: "inline-flex", alignItems: "center", gap: 10, background: "#25D366", color: "#fff", padding: "14px 24px", borderRadius: 12, textDecoration: "none", fontWeight: 700, fontSize: 15 }}
+                >
+                  <i className="fab fa-whatsapp"></i> Falar no WhatsApp
+                </a>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
