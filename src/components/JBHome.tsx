@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { carsQueryOptions, whatsappUrl, type Car } from "@/lib/cars";
 
@@ -178,13 +179,6 @@ export default function JBHome() {
 
   return (
     <div className="jb-app">
-      {/* Sophisticated admin access — floating "car key" pill on the right */}
-      <a href="/admin" title="Área restrita" aria-label="Painel administrativo" className="jb-admin-key">
-        <span className="jb-admin-key__icon"><i className="fas fa-key"></i></span>
-        <span className="jb-admin-key__label">Área Restrita</span>
-        <span className="jb-admin-key__shine" aria-hidden="true"></span>
-      </a>
-
       {/* NAVBAR */}
       <nav id="navbar" className={scrolled ? "scrolled" : ""}>
         <a href="#hero" className="nav-logo">
@@ -195,6 +189,13 @@ export default function JBHome() {
           <li><a href="#sobre">Sobre</a></li>
           <li><a href="#avaliacoes">Avaliações</a></li>
           <li><a href="#contato" className="nav-cta">Falar Conosco</a></li>
+          <li>
+            <Link to="/auth" className="jb-admin-key" title="Área restrita" aria-label="Painel administrativo">
+              <span className="jb-admin-key__icon"><i className="fas fa-key"></i></span>
+              <span className="jb-admin-key__label">Restrito</span>
+              <span className="jb-admin-key__shine" aria-hidden="true"></span>
+            </Link>
+          </li>
         </ul>
         <button className={`nav-hamburger${menuOpen ? " active" : ""}`} onClick={() => setMenuOpen((m) => !m)} aria-label="Menu">
           <span></span><span></span><span></span>
