@@ -27,6 +27,7 @@ const EMPTY: FormState = {
   transmission: "Automático",
   category: "seminovo",
   image_url: "",
+  images: [],
   description: "",
   sold: false,
   featured: false,
@@ -39,6 +40,7 @@ function AdminPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const fileInput = useRef<HTMLInputElement>(null);
+  const galleryInput = useRef<HTMLInputElement>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -46,6 +48,7 @@ function AdminPage() {
   const [editing, setEditing] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [galleryUploading, setGalleryUploading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -104,6 +107,40 @@ function AdminPage() {
     }
   }
 
+  async function uploadOne(file: File): Promise<string> {
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("car-images").upload(path, file, {
+      contentType: file.type,
+      cacheControl: "31536000",
+    });
+    if (upErr) throw upErr;
+    const { data, error: signErr } = await supabase.storage.from("car-images").createSignedUrl(path, TEN_YEARS);
+    if (signErr) throw signErr;
+    return data.signedUrl;
+  }
+
+  async function handleGalleryUpload(files: FileList) {
+    setErr(null);
+    setGalleryUploading(true);
+    try {
+      const urls: string[] = [];
+      for (const file of Array.from(files)) {
+        urls.push(await uploadOne(file));
+      }
+      setForm((f) => ({ ...f, images: [...(f.images || []), ...urls] }));
+    } catch (e: any) {
+      setErr(e.message || "Falha ao enviar imagens");
+    } finally {
+      setGalleryUploading(false);
+      if (galleryInput.current) galleryInput.current.value = "";
+    }
+  }
+
+  function removeGalleryImage(idx: number) {
+    setForm((f) => ({ ...f, images: (f.images || []).filter((_, i) => i !== idx) }));
+  }
+
   async function save(e: React.FormEvent) {
     e.preventDefault();
     setErr(null);
@@ -120,6 +157,7 @@ function AdminPage() {
         transmission: form.transmission || null,
         category: form.category || "seminovo",
         image_url: form.image_url || null,
+        images: form.images || [],
         description: form.description || null,
         sold: !!form.sold,
         featured: !!form.featured,
