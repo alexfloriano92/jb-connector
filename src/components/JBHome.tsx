@@ -228,7 +228,6 @@ export default function JBHome() {
           <li><a href="#catalogo">Catálogo</a></li>
           <li><a href="#sobre">Sobre</a></li>
           <li><a href="#avaliacoes">Avaliações</a></li>
-          <li><a href="#financiamento">Financiamento</a></li>
           <li><a href="#contato" className="nav-cta">Falar Conosco</a></li>
         </ul>
         <button className={`nav-hamburger${menuOpen ? " active" : ""}`} onClick={() => setMenuOpen((m) => !m)} aria-label="Menu">
@@ -240,7 +239,6 @@ export default function JBHome() {
         <a href="#catalogo" onClick={() => setMenuOpen(false)}>Catálogo</a>
         <a href="#sobre" onClick={() => setMenuOpen(false)}>Sobre</a>
         <a href="#avaliacoes" onClick={() => setMenuOpen(false)}>Avaliações</a>
-        <a href="#financiamento" onClick={() => setMenuOpen(false)}>Financiamento</a>
         <a href="#contato" onClick={() => setMenuOpen(false)}>Contato</a>
       </div>
 
@@ -683,7 +681,6 @@ export default function JBHome() {
               <li><a href="#catalogo">Catálogo de Veículos</a></li>
               <li><a href="#sobre">Nossa História</a></li>
               <li><a href="#avaliacoes">Avaliações</a></li>
-              <li><a href="#financiamento">Simulador de Financiamento</a></li>
               <li><a href="#contato">Contato</a></li>
             </ul>
           </div>
@@ -692,7 +689,6 @@ export default function JBHome() {
             <ul className="footer-links">
               <li><a href="#catalogo">Veículos 0KM</a></li>
               <li><a href="#catalogo">Seminovos</a></li>
-              <li><a href="#financiamento">Financiamento</a></li>
               <li><a href="#contato">Troca de Veículo</a></li>
               <li><a href="#contato">Test Drive</a></li>
             </ul>
