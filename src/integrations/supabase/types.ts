@@ -25,6 +25,7 @@ export type Database = {
           fuel: string | null
           id: string
           image_url: string | null
+          images: string[]
           km: number
           model: string
           price: number | null
@@ -44,6 +45,7 @@ export type Database = {
           fuel?: string | null
           id?: string
           image_url?: string | null
+          images?: string[]
           km?: number
           model: string
           price?: number | null
@@ -63,6 +65,7 @@ export type Database = {
           fuel?: string | null
           id?: string
           image_url?: string | null
+          images?: string[]
           km?: number
           model?: string
           price?: number | null
