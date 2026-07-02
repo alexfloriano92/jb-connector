@@ -30,6 +30,8 @@ export default function JBHome() {
   const [formData, setFormData] = useState({ nome: "", telefone: "", email: "", interesse: "", mensagem: "" });
   const [resultInfo, setResultInfo] = useState<{ visible: boolean; text: string }>({ visible: false, text: "" });
   const [noResults, setNoResults] = useState(false);
+  const [selectedCar, setSelectedCar] = useState<Car | null>(null);
+  const [galleryIdx, setGalleryIdx] = useState(0);
   const blurTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -41,6 +43,24 @@ export default function JBHome() {
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
   }, [menuOpen]);
+
+  useEffect(() => {
+    if (selectedCar) {
+      document.body.style.overflow = "hidden";
+      setGalleryIdx(0);
+    } else if (!menuOpen) {
+      document.body.style.overflow = "";
+    }
+  }, [selectedCar, menuOpen]);
+
+  function openCar(c: Car) {
+    setSelectedCar(c);
+  }
+
+  function carGallery(c: Car): string[] {
+    const list = [c.image_url, ...((c.images || []) as string[])].filter(Boolean) as string[];
+    return list.length ? list : [];
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -355,6 +375,8 @@ export default function JBHome() {
                 data-category={c.category}
                 data-brand={c.brand.toLowerCase()}
                 data-model={c.model.toLowerCase()}
+                onClick={() => openCar(c)}
+                style={{ cursor: "pointer" }}
               >
                 <div className="vehicle-card-image">
                   {c.image_url ? (
@@ -381,6 +403,7 @@ export default function JBHome() {
                       target="_blank"
                       rel="noreferrer"
                       className="vehicle-btn"
+                      onClick={(e) => e.stopPropagation()}
                     >
                       <i className="fab fa-whatsapp"></i> Tenho Interesse
                     </a>
