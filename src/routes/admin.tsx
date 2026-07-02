@@ -8,6 +8,9 @@ export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
       { title: "Painel Admin — JB Multimarcas" },
+      { name: "description", content: "Área restrita da equipe JB Multimarcas." },
+      { property: "og:title", content: "Painel Admin — JB Multimarcas" },
+      { property: "og:description", content: "Área restrita da equipe JB Multimarcas." },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),
