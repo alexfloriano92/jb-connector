@@ -281,7 +281,7 @@ export default function JBHome() {
           {[
             { icon: "fa-tag", title: "Compra & Venda", sub: "Melhores preços do mercado" },
             { icon: "fa-exchange-alt", title: "Troca de Veículos", sub: "Avaliação na hora" },
-            { icon: "fa-hand-holding-usd", title: "Financiamento", sub: "Aprovação rápida e facilitada" },
+            { icon: "fa-handshake", title: "Troca com Avaliação", sub: "Avaliamos seu carro na hora" },
             { icon: "fa-coffee", title: "Venha nos Visitar", sub: "Um cafezinho te espera!" },
           ].map((item, i) => (
             <div className="service-strip-item" key={i}>
