@@ -178,6 +178,47 @@ export default function JBHome() {
 
   return (
     <div className="jb-app">
+      {/* Discreet admin access — top-left floating pill */}
+      <a
+        href="/admin"
+        title="Acesso restrito"
+        aria-label="Painel administrativo"
+        style={{
+          position: "fixed",
+          top: 18,
+          left: 18,
+          zIndex: 1000,
+          width: 42,
+          height: 42,
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          background: "rgba(10,10,15,0.55)",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255,197,1,0.25)",
+          color: "#FFC501",
+          textDecoration: "none",
+          transition: "all .3s ease",
+          boxShadow: "0 4px 20px -4px rgba(0,0,0,.6)",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLElement).style.width = "130px";
+          (e.currentTarget as HTMLElement).style.borderRadius = "24px";
+          (e.currentTarget as HTMLElement).style.background = "rgba(255,197,1,0.15)";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.width = "42px";
+          (e.currentTarget as HTMLElement).style.borderRadius = "50%";
+          (e.currentTarget as HTMLElement).style.background = "rgba(10,10,15,0.55)";
+        }}
+      >
+        <i className="fas fa-lock" style={{ fontSize: 14 }}></i>
+        <span style={{ marginLeft: 8, fontSize: 12, fontWeight: 600, letterSpacing: 0.5, whiteSpace: "nowrap", overflow: "hidden" }}>
+          ADMIN
+        </span>
+      </a>
+
       {/* NAVBAR */}
       <nav id="navbar" className={scrolled ? "scrolled" : ""}>
         <a href="#hero" className="nav-logo">
