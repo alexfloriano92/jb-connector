@@ -13,6 +13,7 @@ export type Car = {
   transmission: string | null;
   category: string;
   image_url: string | null;
+  images: string[];
   description: string | null;
   sold: boolean;
   featured: boolean;

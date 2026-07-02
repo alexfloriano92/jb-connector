@@ -27,6 +27,7 @@ const EMPTY: FormState = {
   transmission: "Automático",
   category: "seminovo",
   image_url: "",
+  images: [],
   description: "",
   sold: false,
   featured: false,
@@ -39,6 +40,7 @@ function AdminPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const fileInput = useRef<HTMLInputElement>(null);
+  const galleryInput = useRef<HTMLInputElement>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
@@ -46,6 +48,7 @@ function AdminPage() {
   const [editing, setEditing] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [galleryUploading, setGalleryUploading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -104,6 +107,40 @@ function AdminPage() {
     }
   }
 
+  async function uploadOne(file: File): Promise<string> {
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `${crypto.randomUUID()}.${ext}`;
+    const { error: upErr } = await supabase.storage.from("car-images").upload(path, file, {
+      contentType: file.type,
+      cacheControl: "31536000",
+    });
+    if (upErr) throw upErr;
+    const { data, error: signErr } = await supabase.storage.from("car-images").createSignedUrl(path, TEN_YEARS);
+    if (signErr) throw signErr;
+    return data.signedUrl;
+  }
+
+  async function handleGalleryUpload(files: FileList) {
+    setErr(null);
+    setGalleryUploading(true);
+    try {
+      const urls: string[] = [];
+      for (const file of Array.from(files)) {
+        urls.push(await uploadOne(file));
+      }
+      setForm((f) => ({ ...f, images: [...(f.images || []), ...urls] }));
+    } catch (e: any) {
+      setErr(e.message || "Falha ao enviar imagens");
+    } finally {
+      setGalleryUploading(false);
+      if (galleryInput.current) galleryInput.current.value = "";
+    }
+  }
+
+  function removeGalleryImage(idx: number) {
+    setForm((f) => ({ ...f, images: (f.images || []).filter((_, i) => i !== idx) }));
+  }
+
   async function save(e: React.FormEvent) {
     e.preventDefault();
     setErr(null);
@@ -120,6 +157,7 @@ function AdminPage() {
         transmission: form.transmission || null,
         category: form.category || "seminovo",
         image_url: form.image_url || null,
+        images: form.images || [],
         description: form.description || null,
         sold: !!form.sold,
         featured: !!form.featured,
@@ -258,6 +296,52 @@ function AdminPage() {
                   Remover imagem
                 </button>
               )}
+            </div>
+
+            {/* Additional photos gallery */}
+            <div style={{ marginBottom: 8 }}>
+              <label style={{ ...S.label, marginTop: 0, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span>Fotos adicionais ({(form.images || []).length})</span>
+                <button
+                  type="button"
+                  onClick={() => galleryInput.current?.click()}
+                  disabled={galleryUploading}
+                  style={{ ...S.btn, background: "#1e1e2e", color: "#FFC501", padding: "6px 10px", fontSize: 11 }}
+                >
+                  {galleryUploading ? "Enviando..." : "+ Adicionar fotos"}
+                </button>
+              </label>
+              <input
+                ref={galleryInput}
+                type="file"
+                accept="image/*"
+                multiple
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files && files.length) handleGalleryUpload(files);
+                }}
+              />
+              {(form.images || []).length > 0 && (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, marginTop: 6 }}>
+                  {(form.images || []).map((url, idx) => (
+                    <div key={idx} style={{ position: "relative", aspectRatio: "1 / 1", borderRadius: 8, overflow: "hidden", background: "#0f0f1a", border: "1px solid #1e1e2e" }}>
+                      <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryImage(idx)}
+                        title="Remover"
+                        style={{ position: "absolute", top: 4, right: 4, width: 22, height: 22, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.7)", color: "#fff", cursor: "pointer", fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center" }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{ fontSize: 11, color: "#6b7280", marginTop: 6 }}>
+                A "Foto do veículo" acima é a capa. As fotos adicionais aparecem na galeria quando o cliente abrir o carro.
+              </div>
             </div>
 
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
