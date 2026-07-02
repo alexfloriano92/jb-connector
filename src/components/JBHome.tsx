@@ -236,6 +236,7 @@ export default function JBHome() {
         <div className="hero-overlay-bottom"></div>
         <div className="hero-content">
           <h1 className="hero-title">
+            <span className="sr-only">JB Multimarcas — Veículos 0KM e Seminovos em Cachoeira de Minas. </span>
             A <span className="gold-text">Escolha</span><br />
             Perfeita Para<br />Você
           </h1>
