@@ -78,11 +78,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "JB Multimarcas | Veículos Novos e Seminovos em Cachoeira de Minas - MG" },
-      { name: "description", content: "JB Multimarcas — a melhor concessionária de veículos novos e seminovos de Cachoeira de Minas. Compra, venda, troca e financiamento. Venha tomar um cafezinho e sair com seu carro!" },
+      { title: "JB Multimarcas | Veículos Novos e Seminovos em MG" },
       { name: "author", content: "JB Multimarcas" },
-      { property: "og:title", content: "JB Multimarcas | Veículos Novos e Seminovos" },
-      { property: "og:description", content: "A escolha perfeita para você! Compra, venda, troca e financiamento em Cachoeira de Minas - MG." },
+      { property: "og:site_name", content: "JB Multimarcas" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],

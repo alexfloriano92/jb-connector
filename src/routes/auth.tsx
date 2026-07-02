@@ -6,6 +6,9 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Área Administrativa — JB Multimarcas" },
+      { name: "description", content: "Acesso restrito ao painel administrativo da JB Multimarcas." },
+      { property: "og:title", content: "Área Administrativa — JB Multimarcas" },
+      { property: "og:description", content: "Acesso restrito ao painel administrativo da JB Multimarcas." },
       { name: "robots", content: "noindex,nofollow" },
     ],
   }),

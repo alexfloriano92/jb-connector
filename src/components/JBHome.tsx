@@ -236,6 +236,7 @@ export default function JBHome() {
         <div className="hero-overlay-bottom"></div>
         <div className="hero-content">
           <h1 className="hero-title">
+            <span className="sr-only">JB Multimarcas — Veículos 0KM e Seminovos em Cachoeira de Minas. </span>
             A <span className="gold-text">Escolha</span><br />
             Perfeita Para<br />Você
           </h1>
@@ -297,7 +298,7 @@ export default function JBHome() {
               onFocus={() => { if (searchVal.length > 0) setShowSuggestions(suggestions.length > 0); }}
               onBlur={() => { blurTimeout.current = setTimeout(() => setShowSuggestions(false), 180); }}
             />
-            <button className="catalog-search-clear" onClick={clearSearch} style={{ display: searchVal ? "block" : "none" }} title="Limpar busca">
+            <button className="catalog-search-clear" onClick={clearSearch} style={{ display: searchVal ? "block" : "none" }} title="Limpar busca" aria-label="Limpar busca">
               <i className="fas fa-times"></i>
             </button>
           </div>
@@ -602,9 +603,9 @@ export default function JBHome() {
             </a>
             <p>A melhor concessionária de veículos novos e seminovos de Cachoeira de Minas. Compra, venda, troca e financiamento com atendimento de qualidade.</p>
             <div className="footer-social">
-              <a href="https://wa.me/5535999091119" target="_blank" rel="noreferrer" className="social-btn" title="WhatsApp"><i className="fab fa-whatsapp"></i></a>
-              <a href="https://instagram.com/jb.multimarcaas" target="_blank" rel="noreferrer" className="social-btn" title="Instagram"><i className="fab fa-instagram"></i></a>
-              <a href="https://g.co/kgs/JBMultimarcas" target="_blank" rel="noreferrer" className="social-btn" title="Google"><i className="fab fa-google"></i></a>
+              <a href="https://wa.me/5535999091119" target="_blank" rel="noreferrer" className="social-btn" title="WhatsApp" aria-label="WhatsApp da JB Multimarcas"><i className="fab fa-whatsapp"></i></a>
+              <a href="https://instagram.com/jb.multimarcaas" target="_blank" rel="noreferrer" className="social-btn" title="Instagram" aria-label="Instagram da JB Multimarcas"><i className="fab fa-instagram"></i></a>
+              <a href="https://g.co/kgs/JBMultimarcas" target="_blank" rel="noreferrer" className="social-btn" title="Google" aria-label="Perfil da JB Multimarcas no Google"><i className="fab fa-google"></i></a>
             </div>
           </div>
           <div>
