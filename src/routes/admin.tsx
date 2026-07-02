@@ -298,6 +298,52 @@ function AdminPage() {
               )}
             </div>
 
+            {/* Additional photos gallery */}
+            <div style={{ marginBottom: 8 }}>
+              <label style={{ ...S.label, marginTop: 0, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <span>Fotos adicionais ({(form.images || []).length})</span>
+                <button
+                  type="button"
+                  onClick={() => galleryInput.current?.click()}
+                  disabled={galleryUploading}
+                  style={{ ...S.btn, background: "#1e1e2e", color: "#FFC501", padding: "6px 10px", fontSize: 11 }}
+                >
+                  {galleryUploading ? "Enviando..." : "+ Adicionar fotos"}
+                </button>
+              </label>
+              <input
+                ref={galleryInput}
+                type="file"
+                accept="image/*"
+                multiple
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files && files.length) handleGalleryUpload(files);
+                }}
+              />
+              {(form.images || []).length > 0 && (
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, marginTop: 6 }}>
+                  {(form.images || []).map((url, idx) => (
+                    <div key={idx} style={{ position: "relative", aspectRatio: "1 / 1", borderRadius: 8, overflow: "hidden", background: "#0f0f1a", border: "1px solid #1e1e2e" }}>
+                      <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                      <button
+                        type="button"
+                        onClick={() => removeGalleryImage(idx)}
+                        title="Remover"
+                        style={{ position: "absolute", top: 4, right: 4, width: 22, height: 22, borderRadius: "50%", border: "none", background: "rgba(0,0,0,0.7)", color: "#fff", cursor: "pointer", fontSize: 11, display: "flex", alignItems: "center", justifyContent: "center" }}
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <div style={{ fontSize: 11, color: "#6b7280", marginTop: 6 }}>
+                A "Foto do veículo" acima é a capa. As fotos adicionais aparecem na galeria quando o cliente abrir o carro.
+              </div>
+            </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <div>
                 <label style={S.label}>Marca *</label>
