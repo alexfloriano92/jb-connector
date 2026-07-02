@@ -228,7 +228,6 @@ export default function JBHome() {
           <li><a href="#catalogo">Catálogo</a></li>
           <li><a href="#sobre">Sobre</a></li>
           <li><a href="#avaliacoes">Avaliações</a></li>
-          <li><a href="#financiamento">Financiamento</a></li>
           <li><a href="#contato" className="nav-cta">Falar Conosco</a></li>
         </ul>
         <button className={`nav-hamburger${menuOpen ? " active" : ""}`} onClick={() => setMenuOpen((m) => !m)} aria-label="Menu">
@@ -240,7 +239,6 @@ export default function JBHome() {
         <a href="#catalogo" onClick={() => setMenuOpen(false)}>Catálogo</a>
         <a href="#sobre" onClick={() => setMenuOpen(false)}>Sobre</a>
         <a href="#avaliacoes" onClick={() => setMenuOpen(false)}>Avaliações</a>
-        <a href="#financiamento" onClick={() => setMenuOpen(false)}>Financiamento</a>
         <a href="#contato" onClick={() => setMenuOpen(false)}>Contato</a>
       </div>
 
@@ -281,7 +279,7 @@ export default function JBHome() {
           {[
             { icon: "fa-tag", title: "Compra & Venda", sub: "Melhores preços do mercado" },
             { icon: "fa-exchange-alt", title: "Troca de Veículos", sub: "Avaliação na hora" },
-            { icon: "fa-hand-holding-usd", title: "Financiamento", sub: "Aprovação rápida e facilitada" },
+            { icon: "fa-handshake", title: "Troca com Avaliação", sub: "Avaliamos seu carro na hora" },
             { icon: "fa-coffee", title: "Venha nos Visitar", sub: "Um cafezinho te espera!" },
           ].map((item, i) => (
             <div className="service-strip-item" key={i}>
@@ -511,64 +509,6 @@ export default function JBHome() {
         </div>
       </section>
 
-      {/* FINANCIAMENTO */}
-      <section id="financiamento">
-        <div className="section-header fade-in-up">
-          <div className="section-tag"><i className="fas fa-calculator"></i> Simule</div>
-          <h2 className="section-title">Simulador de <span className="gold">Financiamento</span></h2>
-          <p className="section-subtitle">Simule o financiamento do seu veículo e descubra as melhores condições para o seu bolso.</p>
-        </div>
-        <div className="financiamento-grid">
-          <div className="calculator-card fade-in-up">
-            <h3><i className="fas fa-calculator"></i> Calcule sua Parcela</h3>
-            <div className="form-group">
-              <label htmlFor="calc-valor">Valor do Veículo (R$)</label>
-              <input type="number" className="form-control" id="calc-valor" placeholder="Ex: 85000" min={0} value={calcValor} onChange={(e) => setCalcValor(e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="calc-entrada">Valor de Entrada (R$)</label>
-              <input type="number" className="form-control" id="calc-entrada" placeholder="Ex: 15000" min={0} value={calcEntrada} onChange={(e) => setCalcEntrada(e.target.value)} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="calc-parcelas">Número de Parcelas</label>
-              <select className="form-control" id="calc-parcelas" value={calcParcelas} onChange={(e) => setCalcParcelas(e.target.value)}>
-                <option value="12">12 meses (1 ano)</option>
-                <option value="24">24 meses (2 anos)</option>
-                <option value="36">36 meses (3 anos)</option>
-                <option value="48">48 meses (4 anos)</option>
-                <option value="60">60 meses (5 anos)</option>
-                <option value="72">72 meses (6 anos)</option>
-              </select>
-            </div>
-            <div className="result-card">
-              <div className="result-label">Parcela Estimada</div>
-              <div className="result-value">{calcResult}</div>
-              <div className="result-note">{calcNote}</div>
-            </div>
-            <a href={whatsappUrl("Olá! Quero fazer uma simulação de financiamento.")} target="_blank" rel="noreferrer" className="btn-primary" style={{ width: "100%", justifyContent: "center", marginTop: "20px" }}>
-              <i className="fab fa-whatsapp"></i> Simular com Especialista
-            </a>
-          </div>
-          <div className="fade-in-up">
-            <div className="section-tag" style={{ marginBottom: "16px" }}><i className="fas fa-shield-alt"></i> Por que financiar com a JB?</div>
-            <h3 className="section-title" style={{ fontSize: "28px", marginBottom: "30px" }}>Aprovação <span className="gold">Rápida</span><br />e Sem Burocracia</h3>
-            <div className="fin-features">
-              {[
-                { icon: "fa-bolt", title: "Aprovação em Minutos", desc: "Analisamos sua proposta rapidamente com os melhores bancos parceiros do mercado." },
-                { icon: "fa-percentage", title: "Melhores Taxas", desc: "Trabalhamos com múltiplas financeiras para garantir a melhor taxa para o seu perfil." },
-                { icon: "fa-file-alt", title: "Menos Documentação", desc: "Processo simplificado: RG, CPF, comprovante de renda e residência. É só isso!" },
-                { icon: "fa-users", title: "Atendimento Personalizado", desc: "Nossa equipe acompanha você em cada etapa até a entrega das chaves." },
-              ].map((f, i) => (
-                <div key={i} className="fin-feature">
-                  <div className="fin-feature-icon"><i className={`fas ${f.icon}`}></i></div>
-                  <div><h4>{f.title}</h4><p>{f.desc}</p></div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CONTATO */}
       <section id="contato">
         <div className="section-header fade-in-up">
@@ -683,7 +623,6 @@ export default function JBHome() {
               <li><a href="#catalogo">Catálogo de Veículos</a></li>
               <li><a href="#sobre">Nossa História</a></li>
               <li><a href="#avaliacoes">Avaliações</a></li>
-              <li><a href="#financiamento">Simulador de Financiamento</a></li>
               <li><a href="#contato">Contato</a></li>
             </ul>
           </div>
@@ -692,7 +631,6 @@ export default function JBHome() {
             <ul className="footer-links">
               <li><a href="#catalogo">Veículos 0KM</a></li>
               <li><a href="#catalogo">Seminovos</a></li>
-              <li><a href="#financiamento">Financiamento</a></li>
               <li><a href="#contato">Troca de Veículo</a></li>
               <li><a href="#contato">Test Drive</a></li>
             </ul>
