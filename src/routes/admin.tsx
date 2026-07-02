@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { carsQueryOptions, type Car } from "@/lib/cars";
@@ -33,15 +33,19 @@ const EMPTY: FormState = {
   sort_order: 0,
 };
 
+const TEN_YEARS = 60 * 60 * 24 * 365 * 10;
+
 function AdminPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const fileInput = useRef<HTMLInputElement>(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY);
   const [editing, setEditing] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
   useEffect(() => {
@@ -69,6 +73,7 @@ function AdminPage() {
     setForm(EMPTY);
     setEditing(null);
     setErr(null);
+    if (fileInput.current) fileInput.current.value = "";
   }
 
   function editCar(c: Car) {
@@ -76,6 +81,27 @@ function AdminPage() {
     setEditing(c.id);
     setErr(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function handleUpload(file: File) {
+    setErr(null);
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+      const path = `${crypto.randomUUID()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("car-images").upload(path, file, {
+        contentType: file.type,
+        cacheControl: "31536000",
+      });
+      if (upErr) throw upErr;
+      const { data, error: signErr } = await supabase.storage.from("car-images").createSignedUrl(path, TEN_YEARS);
+      if (signErr) throw signErr;
+      setForm((f) => ({ ...f, image_url: data.signedUrl }));
+    } catch (e: any) {
+      setErr(e.message || "Falha ao enviar imagem");
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function save(e: React.FormEvent) {
@@ -140,12 +166,8 @@ function AdminPage() {
     return (
       <div style={{ minHeight: "100vh", background: "#080810", color: "#fff", padding: 40, textAlign: "center" }}>
         <h1 style={{ fontFamily: "Outfit", fontSize: 28, marginBottom: 12 }}>Acesso restrito</h1>
-        <p style={{ color: "#9aa0c0", marginBottom: 8 }}>Você está logado como <strong>{userEmail}</strong>, mas ainda não tem permissão de administrador.</p>
-        <p style={{ color: "#9aa0c0", marginBottom: 24, maxWidth: 560, marginLeft: "auto", marginRight: "auto" }}>
-          Para liberar seu acesso, um administrador precisa executar (no banco):<br />
-          <code style={{ background: "#13131f", padding: 8, display: "inline-block", marginTop: 8, borderRadius: 6 }}>
-            INSERT INTO public.user_roles (user_id, role) SELECT id, 'admin' FROM auth.users WHERE email = '{userEmail}';
-          </code>
+        <p style={{ color: "#9aa0c0", marginBottom: 24 }}>
+          Você está logado como <strong>{userEmail}</strong>, mas ainda não tem permissão de administrador.
         </p>
         <button onClick={signOut} style={{ padding: "10px 20px", background: "#FFC501", color: "#000", fontWeight: 700, border: "none", borderRadius: 8, cursor: "pointer" }}>Sair</button>
       </div>
@@ -161,7 +183,7 @@ function AdminPage() {
   return (
     <div style={{ minHeight: "100vh", background: "#080810", color: "#fff", padding: "24px", fontFamily: "Inter, sans-serif" }}>
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-        <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32 }}>
+        <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 32, flexWrap: "wrap", gap: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <img src="/assets/images/logo.png" alt="JB" style={{ height: 48 }} />
             <h1 style={{ fontFamily: "Outfit, sans-serif", fontSize: 24 }}>Painel Admin</h1>
@@ -173,12 +195,71 @@ function AdminPage() {
           </div>
         </header>
 
-        <div style={{ display: "grid", gridTemplateColumns: "minmax(0,420px) 1fr", gap: 24, alignItems: "start" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "minmax(0,460px) 1fr", gap: 24, alignItems: "start" }}>
           {/* Form */}
           <form onSubmit={save} style={{ background: "#13131f", padding: 24, borderRadius: 16, border: "1px solid #1e1e2e", position: "sticky", top: 24 }}>
             <h2 style={{ fontFamily: "Outfit, sans-serif", fontSize: 18, marginBottom: 8 }}>
               {editing ? "Editar veículo" : "Novo veículo"}
             </h2>
+
+            {/* Image uploader */}
+            <div style={{ marginTop: 12, marginBottom: 8 }}>
+              <label style={{ ...S.label, marginTop: 0 }}>Foto do veículo</label>
+              <div
+                onClick={() => fileInput.current?.click()}
+                style={{
+                  border: "2px dashed #1e1e2e",
+                  borderRadius: 12,
+                  padding: form.image_url ? 8 : 24,
+                  textAlign: "center",
+                  cursor: "pointer",
+                  background: "#0f0f1a",
+                  transition: "border-color .2s",
+                  minHeight: 140,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {form.image_url ? (
+                  <>
+                    <img src={form.image_url} alt="Prévia" style={{ maxWidth: "100%", maxHeight: 180, borderRadius: 8, objectFit: "cover" }} />
+                    <div style={{ marginTop: 8, fontSize: 12, color: "#9aa0c0" }}>Clique para trocar a imagem</div>
+                  </>
+                ) : uploading ? (
+                  <div style={{ color: "#FFC501", fontSize: 13 }}>
+                    <i className="fas fa-spinner fa-spin" style={{ marginRight: 8 }}></i>Enviando...
+                  </div>
+                ) : (
+                  <>
+                    <i className="fas fa-cloud-upload-alt" style={{ fontSize: 32, color: "#FFC501", marginBottom: 8 }}></i>
+                    <div style={{ fontSize: 14, fontWeight: 600 }}>Clique para enviar uma foto</div>
+                    <div style={{ fontSize: 12, color: "#6b7280", marginTop: 4 }}>JPG, PNG ou WEBP</div>
+                  </>
+                )}
+              </div>
+              <input
+                ref={fileInput}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleUpload(f);
+                }}
+              />
+              {form.image_url && (
+                <button
+                  type="button"
+                  onClick={() => setForm({ ...form, image_url: "" })}
+                  style={{ ...S.btn, background: "transparent", color: "#f87171", padding: "6px 0", fontSize: 12, marginTop: 6 }}
+                >
+                  Remover imagem
+                </button>
+              )}
+            </div>
+
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
               <div>
                 <label style={S.label}>Marca *</label>
@@ -217,12 +298,8 @@ function AdminPage() {
                 </select>
               </div>
               <div style={{ gridColumn: "span 2" }}>
-                <label style={S.label}>Categoria (separe por espaço: novo, seminovo, suv, pickup)</label>
+                <label style={S.label}>Categoria (novo, seminovo, suv, pickup — separadas por espaço)</label>
                 <input style={S.input} value={form.category || ""} onChange={(e) => setForm({ ...form, category: e.target.value })} />
-              </div>
-              <div style={{ gridColumn: "span 2" }}>
-                <label style={S.label}>URL da foto</label>
-                <input style={S.input} value={form.image_url || ""} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="https://... ou /assets/images/car_x.png" />
               </div>
               <div style={{ gridColumn: "span 2" }}>
                 <label style={S.label}>Descrição</label>
@@ -243,7 +320,7 @@ function AdminPage() {
             </div>
             {err && <div style={{ color: "#f87171", fontSize: 13, marginTop: 12 }}>{err}</div>}
             <div style={{ display: "flex", gap: 8, marginTop: 20 }}>
-              <button type="submit" disabled={busy} style={{ ...S.btn, flex: 1, background: "#FFC501", color: "#000" }}>
+              <button type="submit" disabled={busy || uploading} style={{ ...S.btn, flex: 1, background: "#FFC501", color: "#000" }}>
                 {busy ? "Salvando..." : editing ? "Salvar alterações" : "Adicionar veículo"}
               </button>
               {editing && (
