@@ -775,15 +775,25 @@ export default function JBHome() {
                   </div>
                 )}
 
-                {/* CTA */}
-                <a
-                  href={whatsappUrl(`Olá! Tenho interesse no ${c.brand} ${c.model} ${c.year}.`)}
-                  target="_blank"
-                  rel="noreferrer"
-                  style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, width: "100%", background: "#25D366", color: "#fff", padding: "16px 24px", borderRadius: 16, textDecoration: "none", fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: 15, letterSpacing: 0.3, boxShadow: "0 12px 30px -8px rgba(37,211,102,0.35)" }}
-                >
-                  <i className="fab fa-whatsapp" style={{ fontSize: 20 }}></i> Tenho interesse
-                </a>
+                {/* CTAs */}
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  <a
+                    href={whatsappUrl(`Olá! Tenho interesse no ${c.brand} ${c.model} ${c.year}.`)}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "#25D366", color: "#fff", padding: "16px 18px", borderRadius: 16, textDecoration: "none", fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: 0.3, boxShadow: "0 12px 30px -8px rgba(37,211,102,0.35)" }}
+                  >
+                    <i className="fab fa-whatsapp" style={{ fontSize: 18 }}></i> Tenho interesse
+                  </a>
+                  <a
+                    href={whatsappUrl(`Olá! Gostaria de agendar uma visita para ver o ${c.brand} ${c.model} ${c.year} pessoalmente. Qual o melhor horário?`)}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, background: "linear-gradient(135deg, #d4af37 0%, #b8952e 100%)", color: "#0a0a0a", padding: "16px 18px", borderRadius: 16, textDecoration: "none", fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: 14, letterSpacing: 0.3, boxShadow: "0 12px 30px -8px rgba(212,175,55,0.4)" }}
+                  >
+                    <i className="fas fa-calendar-check" style={{ fontSize: 16 }}></i> Agendar visita
+                  </a>
+                </div>
 
                 {/* Back link */}
                 <div style={{ marginTop: 24, display: "flex", justifyContent: "center", paddingBottom: 4 }}>
